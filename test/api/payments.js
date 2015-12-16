@@ -31,7 +31,8 @@ describe("api", function() {
 					done();
 				})
 				.catch(function(error){
-					expect(error).to.be.null;
+					console.log(error);
+					expect(error.message).to.be.null;
 					done();
 				});
 		});
@@ -73,7 +74,8 @@ describe("api", function() {
 					done();
 				})
 				.catch(function(error){
-					expect(error).to.be.null;
+					console.log(error);
+					expect(error.message).to.be.null;
 					done();
 				});
 		});
@@ -114,10 +116,158 @@ describe("api", function() {
 					done();
 				})
 				.catch(function(error){
+					console.log(error);
+					expect(error.message).to.be.null;
+					done();
+				});
+		});
+		it('Should successfully pre-auth and complete a payment', function(done) {
+			var cardPayment = {
+				order_number: testUtil.getOrderNum("payment"),
+			   	amount:80.00,
+			   	payment_method:"card",
+			   	card:{
+			      	name:"John Doe",
+			      	number:"5100000010001004",
+			      	expiry_month:"02",
+			      	expiry_year:"19",
+			      	cvd:"123",
+			      	complete: false // false for pre-auth
+			   	}
+			};
+			beanstream.payments.makePayment(cardPayment)
+				.then(function(response){
+					expect(response).to.have.property('approved', '1');
+					expect(response).to.have.property('type', 'PA');
+					return response.id;
+				})
+				.then(function(transId){
+					return beanstream.payments.completePayment(transId, {amount: 50.50});
+				})
+				.then(function(result) {
+					expect(result).to.have.property('approved', '1');
+					expect(result).to.have.property('type', 'PAC');
+					done();
+				})
+				.catch(function(error){
+					console.log(error);
+					expect(error.message).to.be.null;
+					done();
+				});
+		});
+
+		it('Should successfully return a payment', function(done) {
+			var cardPayment = {
+				order_number: testUtil.getOrderNum("payment"),
+			   	amount:60.00,
+			   	payment_method:"card",
+			   	card:{
+			      	name:"John Doe",
+			      	number:"5100000010001004",
+			      	expiry_month:"02",
+			      	expiry_year:"19",
+			      	cvd:"123"
+			   	}
+			};
+			beanstream.payments.makePayment(cardPayment)
+				.then(function(response){
+					expect(response).to.have.property('approved', '1');
+					expect(response).to.have.property('type', 'P');
+					return response.id;
+				})
+				.then(function(transId){
+					// return a partial amount
+					return beanstream.payments.returnPayment(transId, {amount: 40});
+				})
+				.then(function(result) {
+					expect(result).to.have.property('approved', '1');
+					expect(result).to.have.property('type', 'R');
+					done();
+				})
+				.catch(function(error){
+					console.log(error);
 					expect(error.message).to.be.null;
 					done();
 				});
 		});
 		
+		it('Should successfully void a payment', function(done) {
+			var cardPayment = {
+				order_number: testUtil.getOrderNum("payment"),
+			   	amount:30.00,
+			   	payment_method:"card",
+			   	card:{
+			      	name:"John Doe",
+			      	number:"5100000010001004",
+			      	expiry_month:"02",
+			      	expiry_year:"19",
+			      	cvd:"123"
+			   	}
+			};
+			beanstream.payments.makePayment(cardPayment)
+				.then(function(response){
+					expect(response).to.have.property('approved', '1');
+					expect(response).to.have.property('type', 'P');
+					return response.id;
+				})
+				.then(function(transId){
+					// void payment
+					return beanstream.payments.voidPayment(transId, {amount: 30});
+				})
+				.then(function(result) {
+					expect(result).to.have.property('approved', '1');
+					expect(result).to.have.property('type', 'VP');
+					done();
+				})
+				.catch(function(error){
+					console.log(error);
+					expect(error.message).to.be.null;
+					done();
+				});
+		});
+		it('Should successfully void a return', function(done) {
+			var cardPayment = {
+				order_number: testUtil.getOrderNum("payment"),
+			   	amount:30.00,
+			   	payment_method:"card",
+			   	card:{
+			      	name:"John Doe",
+			      	number:"5100000010001004",
+			      	expiry_month:"02",
+			      	expiry_year:"19",
+			      	cvd:"123"
+			   	}
+			};
+			beanstream.payments.makePayment(cardPayment)
+				.then(function(response){
+					expect(response).to.have.property('approved', '1');
+					expect(response).to.have.property('type', 'P');
+					return response.id;
+				})
+				.then(function(transId){
+					// return whole amount
+					return beanstream.payments.returnPayment(transId, {amount: 30});
+				})
+				.then(function(result) {
+					expect(result).to.have.property('approved', '1');
+					expect(result).to.have.property('type', 'R');
+					return result.id;
+				})
+				.then(function(transId){
+					// void the return
+					return beanstream.payments.voidPayment(transId, {amount: 30});
+				})
+				.then(function(result) {
+					expect(result).to.have.property('approved', '1');
+					expect(result).to.have.property('type', 'VR');
+					done();
+				})
+				.catch(function(error){
+					console.log(error);
+					expect(error.message).to.be.null;
+					done();
+				});
+		});
+
 	});
 });
