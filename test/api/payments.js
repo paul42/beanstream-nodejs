@@ -28,6 +28,7 @@ describe("api", function() {
 			beanstream.payments.makePayment(cardPayment)
 				.then(function(response){
 					expect(response).to.have.property('approved', '1');
+					expect(response).to.have.property('type', 'P');
 					done();
 				})
 				.catch(function(error){
@@ -260,6 +261,40 @@ describe("api", function() {
 				.then(function(result) {
 					expect(result).to.have.property('approved', '1');
 					expect(result).to.have.property('type', 'VR');
+					done();
+				})
+				.catch(function(error){
+					console.log(error);
+					expect(error.message).to.be.null;
+					done();
+				});
+		});
+		it('Should tokenize card and make payment with token', function(done) {
+			var card = {
+		      	number:"5100000010001004",
+		      	expiry_month:"02",
+		      	expiry_year:"19",
+		      	cvd:"123"
+		   	};
+		   	testUtil.tokenizeCard(card)
+		   		.then(function(tokenResp) {
+		   			expect(tokenResp).to.have.property('token');
+		   			
+		   			var tokenPayment = {
+						order_number: testUtil.getOrderNum("token"),
+					   	amount:12.00,
+					   	payment_method:"token",
+					   	token:{
+					   		name:"John Doe",
+					      	code: tokenResp.token,
+					      	complete: true
+					   	}
+					};
+		   			return beanstream.payments.makePayment(tokenPayment);
+		   		})
+				.then(function(response){
+					expect(response).to.have.property('approved', '1');
+					expect(response).to.have.property('type', 'P');
 					done();
 				})
 				.catch(function(error){
