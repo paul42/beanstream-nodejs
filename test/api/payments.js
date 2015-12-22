@@ -11,7 +11,7 @@ describe("testUtil", function() {
 });
 
 describe("api", function() {
-	describe("payments", function() {
+	describe.skip("payments", function() {
 		it('Should successfully make payment', function(done) {
 			var cardPayment = {
 				order_number: testUtil.getOrderNum("payment"),

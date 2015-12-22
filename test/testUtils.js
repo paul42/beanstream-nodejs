@@ -38,6 +38,7 @@ module.exports = {
 			// send request
 			client.post("https://www.beanstream.com/scripts/tokenization/tokens", args, function(data, response) {
 				if(Buffer.isBuffer(data)){
+					console.log(data.toString('utf8'));
 				    data = JSON.parse(data.toString('utf8'));
 				}
 				if (response.statusCode == 200) {
@@ -48,5 +49,5 @@ module.exports = {
 				
 			});
 		});
-	}
+	},
 };

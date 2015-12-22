@@ -43,9 +43,9 @@ describe("beanstream", function() {
 			beanstream.setPaymentsApiKey("payKey");
 			return expect(beanstream.getConfigField("paymentsApiKey")).to.equal('payKey');
 		});
-		it('Should set reporting API key', function() {
-			beanstream.setReportingApiKey("reportKey");
-			return expect(beanstream.getConfigField("reportingApiKey")).to.equal('reportKey');
+		it('Should set reports API key', function() {
+			beanstream.setReportsApiKey("reportKey");
+			return expect(beanstream.getConfigField("reportsApiKey")).to.equal('reportKey');
 		});
 		it('Should set profile API key', function() {
 			beanstream.setProfilesApiKey("profileKey");
