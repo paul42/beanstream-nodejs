@@ -5,7 +5,7 @@ var testUtil = require('../testUtils');
 var beanstream = testUtil.getTestBeanstream();
 
 describe("api", function() {
-	describe.skip("profiles", function() {
+	describe("profiles", function() {
 		it('Should successfully create a profile', function(done) {
 			var profile = {
 			   	card:{

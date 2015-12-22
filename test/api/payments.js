@@ -11,7 +11,7 @@ describe("testUtil", function() {
 });
 
 describe("api", function() {
-	describe.skip("payments", function() {
+	describe("payments", function() {
 		it('Should successfully make payment', function(done) {
 			var cardPayment = {
 				order_number: testUtil.getOrderNum("payment"),
@@ -303,6 +303,103 @@ describe("api", function() {
 					done();
 				});
 		});
+	});
 
+	describe("tokens", function() {
+		it('Should tokenize card and make payment with token', function(done) {
+			var card = {
+		      	number:"5100000010001004",
+		      	expiry_month:"02",
+		      	expiry_year:"19",
+		      	cvd:"123"
+		   	};
+		   	testUtil.tokenizeCard(card)
+		   		.then(function(tokenResp) {
+		   			expect(tokenResp).to.have.property('token');
+		   			
+		   			var tokenPayment = {
+						order_number: testUtil.getOrderNum("token"),
+					   	amount:12.00,
+					   	payment_method:"token",
+					   	token:{
+					   		name:"John Doe",
+					      	code: tokenResp.token,
+					      	complete: true
+					   	}
+					};
+		   			return beanstream.payments.makePayment(tokenPayment);
+		   		})
+				.then(function(response){
+					expect(response).to.have.property('approved', '1');
+					expect(response).to.have.property('type', 'P');
+					done();
+				})
+				.catch(function(error){
+					console.log(error);
+					expect(error.message).to.be.null;
+					done();
+				});
+		});
+	});
+
+	describe("profiles", function() {
+		it('Should make payment with a profile', function(done) {
+			var card = {
+			      	name:"Jon Profile",
+			      	number:"5100000010001004",
+			      	expiry_month:"02",
+			      	expiry_year:"19",
+			      	cvd:"123"
+			   	};
+			
+			testUtil.tokenizeCard(card)
+				.then(function(response){
+					expect(response).to.have.property('token');
+					var profile = {
+					   	token: {
+					   		name: "Jon Profile",
+					   		code: response.token
+					   	},
+					   	billing: {
+					   		name: "Jon Profile",
+					   		address_line1: "123 fake street",
+					   		city: "victoria",
+					   		province: "bc",
+					   		postal_code: "V9A3Z4",
+					   		country: "ca",
+					   		email_address: "fake@example.com",
+					   		phone_number:"12345678"
+					   	}
+					};
+					return beanstream.profiles.createProfile(profile)
+				})
+				.then(function(response){
+					expect(response).to.have.property('message', 'Operation Successful');
+					expect(response).to.have.property('customer_code');
+
+					var profilePayment = {
+						order_number: testUtil.getOrderNum("payment"),
+					   	amount:3.00,
+					   	payment_method:"payment_profile",
+					   	payment_profile:{
+					      	customer_code: response.customer_code,
+					      	card_id: 1,
+					      	complete: true
+					   	},
+					   	comment: 'making a payment with a tokenized card on a payment profile.'
+					};
+					return beanstream.payments.makePayment(profilePayment);
+				})
+				.then(function(response){
+					expect(response).to.have.property('approved', '1');
+					expect(response).to.have.property('type', 'P');
+					done();
+				})
+				.catch(function(error){
+					console.log(error);
+					expect(error.message).to.be.null;
+					done();
+				});
+		});
 	});
 });
