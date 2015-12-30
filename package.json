@@ -1,6 +1,6 @@
 {
-  "name": "beanstream",
-  "version": "1.0.0",
+  "name": "beanstream-node",
+  "version": "1.0.0-3-beta",
   "description": "Beanstream NodeJS SDK",
   "keywords": [
     "beanstream",
@@ -10,16 +10,16 @@
     "bambora",
     "secure"
   ],
-  "homepage": "https://github.com/beanstream-drwp/beanstream-node",
+  "homepage": "https://github.com/beanstream-drwp/beanstream-nodejs",
   "author": "Beanstream <support@beanstream.com> (https://beanstream.com/)",
   "contributors": [
     "Brent Owens"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/beanstream-drwp/beanstream-node.git"
+    "url": "git://github.com/beanstream-drwp/beanstream-nodejs.git"
   },
-  "bugs:": "https://github.com/beanstream-drwp/beanstream-node/issues",
+  "bugs:": "https://github.com/beanstream-drwp/beanstream-nodejs/issues",
   "engines": {
     "node": ">= v0.10.0"
   },
