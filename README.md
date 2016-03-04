@@ -8,7 +8,7 @@ The Node SDK for Beanstream lets you take payments, save payment profiles, and r
 # Get Started
 
 ### Step 1) Install the module using NPM
-Import the project directly from Github:
+Import the project directly from npm:
 ```
 npm install beanstream-node
 ```
