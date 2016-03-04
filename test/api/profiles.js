@@ -219,6 +219,55 @@ describe("api", function() {
           done();
         });
     });
+    it('Should successfully update a minimal profile', function(done) {
+      var profile = {
+        card:{
+          name:"Jon Update",
+          number:"5100000010001004",
+          expiry_month:"02",
+          expiry_year:"19",
+          cvd:"123"
+        },
+        billing: {
+          name: "Jon Update",
+          address_line1: "456 fake street",
+          city: "victoria",
+          province: "bc",
+          postal_code: "V9A3Z4",
+          country: "ca",
+          email_address: "fake@example.com",
+          phone_number:"12345678"
+        }
+      };
+      beanstream.profiles.createProfile(profile)
+        .then(function(response){
+          expect(response).to.have.property('message', 'Operation Successful');
+          expect(response).to.have.property('customer_code');
+          return response.customer_code;
+        })
+        .then(function(profileId){
+          var updatedProfile = {
+            billing: {
+              address_line1: "123 fake street"
+            }
+          };
+          return beanstream.profiles.updateProfile(updatedProfile, profileId);
+        })
+        .then(function(response){
+          expect(response).to.have.property('message', 'Operation Successful');
+          return beanstream.profiles.getProfile(response.customer_code);
+        })
+        .then(function(profile3){
+          expect(profile3).to.have.property('billing');
+          expect(profile3.billing).to.have.property('address_line1', '123 fake street');
+          done();
+        })
+        .catch(function(error){
+          console.log(error);
+          expect(error.message).to.be.null;
+          done();
+        });
+    });
     it('Should successfully add a card to a profile and get cards', function(done) {
       var profile = {
         card:{
