@@ -68,11 +68,34 @@ describe("api", function() {
       
     });
     it('Should successfully get a past payment', function(done) {
-      beanstream.payments.getPayment(10122494)
-        .then(function(transaction){
-          expect(transaction).to.not.be.null;
-          expect(transaction).to.have.property('amount', 10);
-          done();
+
+      var cardPayment = {
+        order_number: testUtil.getOrderNum("payment"),
+        amount:6.00,
+        payment_method:"card",
+        card:{
+          name:"John Doe",
+          number:"5100000010001004",
+          expiry_month:"02",
+          expiry_year:"19",
+          cvd:"123"
+        }
+      };
+      beanstream.payments.makePayment(cardPayment)
+        .then(function(response){
+          expect(response).to.have.property('approved', '1');
+          expect(response).to.have.property('type', 'P');
+          beanstream.payments.getPayment(response.id)
+            .then(function(transaction){
+              expect(transaction).to.not.be.null;
+              expect(transaction).to.have.property('amount', 6);
+              done();
+            })
+            .catch(function(error){
+              console.log(error);
+              expect(error.message).to.be.null;
+              done();
+            });
         })
         .catch(function(error){
           console.log(error);
@@ -80,6 +103,7 @@ describe("api", function() {
           done();
         });
     });
+
     it('Should successfully get a new payment', function(done) {
       var cardPayment = {
         order_number: testUtil.getOrderNum("payment"),

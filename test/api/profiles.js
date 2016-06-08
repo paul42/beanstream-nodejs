@@ -219,7 +219,7 @@ describe("api", function() {
           done();
         });
     });
-    it('Should successfully update a minimal profile', function(done) {
+    it.skip('Should successfully update a minimal profile', function(done) {
       var profile = {
         card:{
           name:"Jon Update",
@@ -260,6 +260,7 @@ describe("api", function() {
         .then(function(profile3){
           expect(profile3).to.have.property('billing');
           expect(profile3.billing).to.have.property('address_line1', '123 fake street');
+          expect(profile3.billing).to.have.property('name', 'John Update');
           done();
         })
         .catch(function(error){

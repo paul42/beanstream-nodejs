@@ -9,7 +9,7 @@ var client = new Client();
 module.exports = {
 
   getTestBeanstream: function() {
-    return require('../lib/beanstream')('300200578', '4BaD82D9197b4cc4b70a221911eE9f70', 'D97D3BE1EE964A6193D17A571D9FBC80', '4e6Ff318bee64EA391609de89aD4CF5d', 'v1');
+    return require('../lib/beanstream')('300202846', 'bcB6d13774E9419787967bcAc9Fb84E0', '816211C7845349A282EA18BCA696A4DB', '35BEFFCe07ee41e1bA5eE7EB960Aa3e2', 'v1');
   },
 
   getOrderNum: function(prefix) {
