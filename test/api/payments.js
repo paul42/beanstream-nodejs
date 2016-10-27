@@ -37,6 +37,31 @@ describe("api", function() {
           done();
         });
     });
+    it('Should successfully make payment on behalf of a sub-merchant', function(done) {
+      var cardPayment = {
+        order_number: testUtil.getOrderNum("payment"),
+        amount:10.00,
+        payment_method:"card",
+        card:{
+          name:"John Doe",
+          number:"5100000010001004",
+          expiry_month:"02",
+          expiry_year:"19",
+          cvd:"123"
+        }
+      };
+      beanstream.payments.makeSubMerchantPayment('300202846', 'bcB6d13774E9419787967bcAc9Fb84E0', cardPayment)
+        .then(function(response){
+          expect(response).to.have.property('approved', '1');
+          expect(response).to.have.property('type', 'P');
+          done();
+        })
+        .catch(function(error){
+          console.log(error);
+          expect(error.message).to.be.null;
+          done();
+        });
+    });
     it('Should get a declined payment', function(done) {
       var cardPayment = {
         order_number: testUtil.getOrderNum("payment"),
@@ -52,7 +77,8 @@ describe("api", function() {
       };
       beanstream.payments.makePayment(cardPayment)
         .then(function(response){
-          expect(false).to.be.true; // should not get here
+          assert.fail(0, 1, 'Meaningful Error about why this code should not be reached.');
+          // expect(false).to.be.true; // should not get here
           done();
         })
         .catch(function(error){
@@ -65,7 +91,7 @@ describe("api", function() {
           );
           done();
         });
-      
+
     });
     it('Should successfully get a past payment', function(done) {
 
@@ -130,7 +156,7 @@ describe("api", function() {
         .then(function(transaction) {
           expect(transaction).to.have.property('id', transactionId);
           expect(transaction).to.have.property('amount', 10);
-          expect(transaction.card).to.deep.equal({ 
+          expect(transaction.card).to.deep.equal({
             name: 'John Doe',
             expiry_month: '02',
             expiry_year: '19',
@@ -215,7 +241,7 @@ describe("api", function() {
           done();
         });
     });
-    
+
     it('Should successfully void a payment', function(done) {
       var cardPayment = {
         order_number: testUtil.getOrderNum("payment"),
@@ -303,7 +329,7 @@ describe("api", function() {
       testUtil.tokenizeCard(card)
         .then(function(tokenResp) {
           expect(tokenResp).to.have.property('token');
-          
+
           var tokenPayment = {
             order_number: testUtil.getOrderNum("token"),
             amount:12.00,
@@ -340,7 +366,7 @@ describe("api", function() {
       testUtil.tokenizeCard(card)
         .then(function(tokenResp) {
           expect(tokenResp).to.have.property('token');
-          
+
           var tokenPayment = {
             order_number: testUtil.getOrderNum("token"),
             amount:12.00,
@@ -375,7 +401,7 @@ describe("api", function() {
           expiry_year:"19",
           cvd:"123"
         };
-      
+
       testUtil.tokenizeCard(card)
         .then(function(response){
           expect(response).to.have.property('token');
