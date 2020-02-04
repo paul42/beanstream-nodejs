@@ -1,4 +1,4 @@
-beanstream-nodejs
+beanstream-nodejs (Legacy)
 =================
 
 NodeJS integration to Bambora API.
