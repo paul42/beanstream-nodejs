@@ -1,4 +1,4 @@
-beanstream-nodejs (Legacy)
+beanstream-nodejs ([Legacy](https://dev.na.bambora.com/docs/references/payment_SDKs/#legacy-sdk))
 =================
 
 NodeJS integration to Bambora API.
