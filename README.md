@@ -1,9 +1,13 @@
-beanstream-nodejs
+beanstream-nodejs ([Legacy](https://dev.na.bambora.com/docs/references/payment_SDKs/#legacy-sdk))
 =================
 
-NodeJS integration to Beanstream API.
+NodeJS integration to Bambora API.
 
-The Node SDK for Beanstream lets you take payments, save payment profiles, and run reports on your transactions. It's easy to get started, just follow the steps below
+The Node SDK for Bambora lets you take payments, save payment profiles, and run reports on your transactions. It's easy to get started, just follow the steps below
+
+# TLS 1.2 support
+For testing instructions with our TLS1.2-only server, please refer to our [developer portal](https://dev.na.bambora.com/docs/references/payment_SDKs/support_tls12/#nodejs-sdk)
+
 
 # Get Started
 
@@ -22,7 +26,7 @@ var beanstream = require('beanstream-node')('merchantId', 'Payments API key', 'P
 Supply your merchant ID, payments API Key, Profiles API key (optional), and Reporting API key (optional).
 
 ### Step 3) Make a Payment
-The Beanstream SDK uses promises to handle asynchronous calls to the server. You will get your results in a [Promise](http://bluebirdjs.com/docs/why-promises.html) object. Here is an example:
+The Bambora SDK uses promises to handle asynchronous calls to the server. You will get your results in a [Promise](http://bluebirdjs.com/docs/why-promises.html) object. Here is an example:
 
 ```js
 var tokenPayment = {
@@ -70,10 +74,10 @@ beanstream.payments.makePayment(cardPayment)
     console.log(error);
   });
 ```
-Note that you should tokenize cards in your client-side app in order to reduce your PCI scope. More: http://developer.beanstream.com/documentation/legato/
+Note that you should tokenize cards in your client-side app in order to reduce your PCI scope. More details [here:](https://dev.na.bambora.com/docs/references/payment_SDKs/take_payments/#single-use-token)
 
 ### Step 4) Examples
-Visit http://developer.beanstream.com for more code examples. You will learn how to:
+Visit [developer portal](https://dev.na.bambora.com/docs/references/payment_SDKs/take_payments/) for more code examples. You will learn how to:
 * create a card token
 * make a payment with a token
 * make a card payment

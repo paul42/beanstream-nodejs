@@ -32,7 +32,7 @@
   "dependencies": {
     "bluebird": "^2.9.6",
     "qs": "^2.4.1",
-    "lodash": "^3.1.0",
+    "lodash": "^4.17.5",
     "node-rest-client": "~1.5.1",
     "shortid": "2.2.6"
   },
